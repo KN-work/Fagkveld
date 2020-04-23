@@ -45,11 +45,27 @@ services:
     container_name: db
     volumes:
       - "db-data:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
     networks:
       - back-tier
 
+  portainer:
+    image: portainer/portainer
+    command: -H unix:///var/run/docker.sock
+    restart: always
+    ports:
+      - 9000:9000
+      - 8000:8000
+    stop_grace_period: 1m30s
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+  
 volumes:
   db-data:
+  portainer_data:
 
 networks:
   front-tier:
